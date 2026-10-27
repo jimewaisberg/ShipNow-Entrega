@@ -8,6 +8,7 @@ app.use(express.json());
 app.get('/health', (req, res) => res.json({ status: 'ok', environment: config.nodeEnv }));
 app.use('/api/products', require('./routes/products'));
 app.use('/api/users', require('./routes/users'));
+app.use('/api/mocks', require('./routes/mocks'));
 app.use((req, res) => res.status(404).json({ status: 'error', message: 'Ruta no encontrada' }));
 app.use((err, req, res, next) => {
   const status = err.statusCode || (err.name === 'CastError' || err.name === 'ValidationError' ? 400 : err.code === 11000 ? 409 : 500);

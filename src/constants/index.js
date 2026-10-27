@@ -1,4 +1,6 @@
-const USER_ROLES = Object.freeze({ ADMIN: 'admin', USER: 'user' });
+const USER_ROLES = Object.freeze({ ADMIN: 'admin', USER: 'user', DRIVER: 'driver' });
 const PRODUCT_STATUS = Object.freeze({ AVAILABLE: 'AVAILABLE', OUT_OF_STOCK: 'OUT_OF_STOCK' });
 const ORDER_STATUS = Object.freeze({ PENDING: 'PENDING', SHIPPED: 'SHIPPED', DELIVERED: 'DELIVERED' });
-module.exports = { USER_ROLES, PRODUCT_STATUS, ORDER_STATUS };
+const ORDER_PRIORITY = Object.freeze({ LOW: 'LOW', NORMAL: 'NORMAL', HIGH: 'HIGH' });
+const DELIVERY_STATUS = Object.freeze({ PENDING: 'PENDING', ASSIGNED: 'ASSIGNED', IN_TRANSIT: 'IN_TRANSIT', DELIVERED: 'DELIVERED' });
+module.exports = { USER_ROLES, PRODUCT_STATUS, ORDER_STATUS, ORDER_PRIORITY, DELIVERY_STATUS };

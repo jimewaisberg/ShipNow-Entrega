@@ -1,8 +1,8 @@
 {
   "name": "shipnow-api",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "Pre-entrega Módulo 1: ShipNow con Controllers, Services y Repositories",
+  "description": "Pre-entrega Módulo 2: ShipNow con mocking y carga controlada de datos",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",

@@ -7,4 +7,4 @@ if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('PORT d
 const nodeEnv = process.env.NODE_ENV;
 if (!['development', 'test', 'production'].includes(nodeEnv)) throw new Error('NODE_ENV debe ser development, test o production');
 if (!/^mongodb(\+srv)?:\/\//.test(process.env.MONGODB_URI)) throw new Error('MONGODB_URI debe ser una URI MongoDB válida');
-module.exports = Object.freeze({ port, nodeEnv, mongodbUri: process.env.MONGODB_URI });
+module.exports = Object.freeze({ port, nodeEnv, mongodbUri: process.env.MONGODB_URI, mockSeedEnabled: process.env.MOCK_SEED_ENABLED === 'true' });

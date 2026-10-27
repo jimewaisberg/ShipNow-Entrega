@@ -1,0 +1,10 @@
+const { Router } = require('express');
+const controller = require('../controllers/mock.controller');
+const router = Router();
+router.get('/users', controller.users);
+router.get('/drivers', controller.drivers);
+router.get('/orders', controller.orders);
+router.get('/deliveries', controller.deliveries);
+router.get('/bundle', controller.bundle);
+router.post('/seed', controller.seed);
+module.exports = router;
