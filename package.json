@@ -1,0 +1,22 @@
+{
+  "name": "shipnow-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pre-entrega Módulo 1: ShipNow con Controllers, Services y Repositories",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^8.19.2",
+    "mongoose-paginate-v2": "^1.8.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
