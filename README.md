@@ -1,8 +1,13 @@
 # ShipNow — API REST
 
-Proyecto backend desarrollado con Node.js, Express, MongoDB y Mongoose.
+ShipNow API es una API REST desarrollada con Node.js, Express y MongoDB, organizada mediante una arquitectura por capas.
 
-Incluye las funcionalidades de las pre-entregas de los módulos 1, 2 y 3, manteniendo una arquitectura por capas y buenas prácticas de desarrollo.
+El proyecto incluye las pre-entregas correspondientes a los siguientes módulos:
+
+- **Módulo 1:** Arquitectura por capas, configuración del entorno y conexión a MongoDB.
+- **Módulo 2:** Generación de datos ficticios (mocks) para realizar pruebas.
+- **Módulo 3:** Manejo profesional y centralizado de errores mediante errores personalizados y un middleware global.
+- **Módulo 4:** Logging y monitoreo básico con Winston, persistencia de errores y rotación automática de archivos.
 
 ## Módulo 1 — Arquitectura por capas
 
