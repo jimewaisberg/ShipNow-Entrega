@@ -1,26 +1,45 @@
+
 const { randomUUID } = require('node:crypto');
 const { generate, quantity } = require('./mock.generator');
 const bcrypt = require('bcrypt');
 const repo = require('../repositories/mock.repository');
-const { HttpError } = require('../utils/errors');
+const { AppError } = require('../errors/AppError');
 const config = require('../config/env.config');
 
 class MockService {
   preview(kind, qtyInput) {
+    if (config.nodeEnv === 'production') {
+      throw new AppError('MOCKS_DISABLED');
+    }
+
+    const keys = ['users', 'drivers', 'orders', 'deliveries', 'bundle'];
+
+    if (!keys.includes(kind)) {
+      throw new AppError('INVALID_MOCK_TYPE');
+    }
+
     const data = generate(quantity(qtyInput));
-    if (kind === 'bundle') return data;
-    const key = { users: 'users', drivers: 'drivers', orders: 'orders', deliveries: 'deliveries' }[kind];
-    if (!key) throw new HttpError('Tipo de mock inválido', 400);
-    return data[key];
+
+    return kind === 'bundle' ? data : data[kind];
   }
+
   async seed(qtyInput) {
     if (config.nodeEnv === 'production' || !config.mockSeedEnabled) {
-      throw new HttpError('Carga de prueba deshabilitada. Activá MOCK_SEED_ENABLED=true solo en desarrollo.', 403);
+      throw new AppError('MOCK_SEED_DISABLED');
     }
+
     const data = generate(quantity(qtyInput));
-    // Se mantiene el hash de contraseñas: jamás guardar contraseñas en texto plano.
+
+    // Nunca guardamos contraseñas en texto plano.
     const hashed = await bcrypt.hash(randomUUID(), 10);
-    return repo.seed(data, hashed);
+
+    try {
+      return await repo.seed(data, hashed);
+    } catch (error) {
+      console.error('Error al insertar mocks:', error);
+      throw new AppError('MOCK_SEED_FAILED');
+    }
   }
 }
+
 module.exports = new MockService();

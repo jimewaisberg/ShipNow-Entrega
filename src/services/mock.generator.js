@@ -1,12 +1,16 @@
 const { randomUUID } = require('node:crypto');
 const { USER_ROLES, ORDER_STATUS, ORDER_PRIORITY, DELIVERY_STATUS } = require('../constants');
-const { HttpError } = require('../utils/errors');
+const { InvalidMockQuantityError } = require('../errors/AppError');
 const firstNames = ['Ana', 'Luis', 'María', 'Pedro', 'Sofía', 'Tomás', 'Valentina', 'Mateo'];
 const lastNames = ['Pérez', 'Gómez', 'López', 'García', 'Fernández', 'Ruiz'];
 const priorities = Object.values(ORDER_PRIORITY);
 function quantity(value) {
   const qty = value === undefined ? 5 : Number(value);
-  if (!Number.isInteger(qty) || qty < 1 || qty > 50) throw new HttpError('qty debe ser un entero entre 1 y 50', 400);
+
+  if (!Number.isInteger(qty) || qty < 1 || qty > 50) {
+    throw new InvalidMockQuantityError();
+  }
+
   return qty;
 }
 function generate(qty) {

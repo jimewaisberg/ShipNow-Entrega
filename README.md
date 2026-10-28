@@ -1,59 +1,309 @@
-# ShipNow — Pre-entrega Módulo 2: Mocking y carga de datos
+# ShipNow — API REST
 
-Extensión de la API del Módulo 1. Arquitectura **Routes → Controllers → Services → Repositories → Models**, con generación de Usuarios, Repartidores (usuarios con rol `driver`), Pedidos y Entregas. Conserva todos los endpoints del módulo anterior.
+Proyecto backend desarrollado con Node.js, Express, MongoDB y Mongoose.
 
-## Instalación
+Incluye las funcionalidades de las pre-entregas de los módulos 1, 2 y 3, manteniendo una arquitectura por capas y buenas prácticas de desarrollo.
 
-1. `npm install`
-2. Copiar `.env.example` a `.env`. Configurar `PORT`, `NODE_ENV` y `MONGODB_URI` (MongoDB Atlas o local). **No publicar `.env`.**
-3. `npm run dev`
-4. `npm test` (prueba el módulo anterior y la coherencia de los mocks sin una DB real).
+## Módulo 1 — Arquitectura por capas
 
-Para habilitar la inserción de datos de prueba **solo en desarrollo**, configurar `MOCK_SEED_ENABLED=true` en el `.env` local y reiniciar la aplicación. En producción los mocks y la carga están deshabilitados.
+La API está organizada siguiendo la estructura:
 
-## API de mocking
+**Routes → Controllers → Services → Repositories → Models**
 
-| Método | Ruta | Descripción |
-|---|---|---|
-| GET | `/api/mocks/users?qty=2` | Usuarios ficticios con rol `user`; no persiste |
-| GET | `/api/mocks/drivers?qty=2` | Repartidores ficticios con rol `driver`; no persiste |
-| GET | `/api/mocks/orders?qty=2` | Pedidos con prioridad y estado válidos; no persiste |
-| GET | `/api/mocks/deliveries?qty=2` | Entregas vinculadas a pedidos simulados; no persiste |
-| GET | `/api/mocks/bundle?qty=2` | Grafo completo: `users`, `drivers`, `orders`, `deliveries`; no persiste |
-| POST | `/api/mocks/seed` | Inserta lote coherente en MongoDB, si está habilitado |
+Cada capa tiene una responsabilidad específica:
 
-`qty` es opcional (por defecto 5) y admite enteros entre 1 y 50. En `bundle`, genera `qty` clientes, `ceil(qty/3)` repartidores (mínimo uno), `qty` pedidos y `qty` entregas. `seed` usa idéntica convención. Los identificadores `mockId` de GET son **temporales** y sirven para representar vínculos: la carga POST los sustituye por referencias `ObjectId` reales. GET no guarda ningún documento.
+- **Routes:** definen los endpoints disponibles.
+- **Controllers:** reciben las solicitudes HTTP y delegan las operaciones.
+- **Services:** implementan la lógica de negocio y las validaciones.
+- **Repositories:** realizan las operaciones de acceso a MongoDB.
+- **Models:** definen los esquemas de datos con Mongoose.
 
-### Ejemplos de prueba
+Se implementaron endpoints para administrar usuarios y productos, configuraciones mediante variables de entorno y constantes compartidas.
 
-```bash
-curl 'http://localhost:8080/api/mocks/users?qty=2'
-curl 'http://localhost:8080/api/mocks/bundle?qty=2'
-curl -i -X POST 'http://localhost:8080/api/mocks/seed' -H 'Content-Type: application/json' -d '{"qty":10}'
+## Instalación y configuración
+
+Requisitos: Node.js, npm y una conexión a MongoDB local o MongoDB Atlas.
+
+1. Clonar el repositorio.
+2. Ejecutar `npm install`.
+3. Copiar `.env.example` a `.env`.
+4. Configurar `PORT`, `NODE_ENV` y `MONGODB_URI`.
+5. Iniciar el servidor con `npm run dev`.
+
+Ejemplo de configuración:
+
+```dotenv
+PORT=8080
+NODE_ENV=development
+MONGODB_URI=mongodb://127.0.0.1:27017/shipnow
+MOCK_SEED_ENABLED=false
 ```
 
-Respuesta de `POST /api/mocks/seed` (cantidades para `qty=10`; los IDs cambian):
+Si se utiliza MongoDB Atlas, reemplazar `MONGODB_URI` por una cadena de conexión propia.
+
+**Importante:** nunca publicar el archivo `.env` ni las credenciales de MongoDB.
+
+Para ejecutar las pruebas:
+
+```bash
+npm test
+```
+
+## Módulo 2 — Mocking y carga de datos de prueba
+
+Se incorporó un sistema de generación de datos ficticios para probar el funcionamiento de ShipNow sin depender de información real.
+
+El módulo permite generar:
+
+- Usuarios con rol `user`.
+- Repartidores con rol `driver`.
+- Pedidos con estados y prioridades válidos.
+- Entregas relacionadas con pedidos y repartidores.
+
+### Endpoints de mocking
+
+| Método | Endpoint | Descripción |
+|---|---|---|
+| GET | `/api/mocks/users?qty=2` | Genera usuarios ficticios |
+| GET | `/api/mocks/drivers?qty=2` | Genera repartidores ficticios |
+| GET | `/api/mocks/orders?qty=2` | Genera pedidos ficticios |
+| GET | `/api/mocks/deliveries?qty=2` | Genera entregas ficticias |
+| GET | `/api/mocks/bundle?qty=2` | Genera un conjunto de datos relacionados |
+| POST | `/api/mocks/seed` | Inserta datos ficticios en MongoDB |
+
+Los endpoints GET generan datos temporalmente y **no los guardan en MongoDB**.
+
+La cantidad `qty` es opcional, tiene un valor predeterminado de 5 y admite enteros entre 1 y 50.
+
+### Ejemplos de uso
+
+Generar usuarios:
+
+```bash
+curl "http://localhost:8080/api/mocks/users?qty=2"
+```
+
+Generar un conjunto completo:
+
+```bash
+curl "http://localhost:8080/api/mocks/bundle?qty=2"
+```
+
+### Inserción en MongoDB
+
+El endpoint `POST /api/mocks/seed` permite guardar datos ficticios en MongoDB.
+
+Para habilitarlo, configurar en el archivo `.env`:
+
+```dotenv
+MOCK_SEED_ENABLED=true
+```
+
+Reiniciar el servidor después de modificar la configuración.
+
+Ejemplo:
+
+```bash
+curl -i -X POST "http://localhost:8080/api/mocks/seed" \
+  -H "Content-Type: application/json" \
+  -d '{"qty":10}'
+```
+
+Para `qty=10`, se generan 10 clientes, 4 repartidores, 10 pedidos y 10 entregas.
+
+La respuesta informa las cantidades insertadas y los identificadores creados en MongoDB.
+
+Los identificadores temporales `mockId` se sustituyen por referencias reales de MongoDB durante la inserción.
+
+Si ocurre una falla, el repositorio intenta eliminar los registros creados durante esa ejecución. Este mecanismo **no constituye una transacción de MongoDB**, por lo que no garantiza atomicidad completa.
+
+Las contraseñas ficticias se almacenan mediante hashes y los correos utilizan el dominio de prueba `example.test`.
+
+### Seguridad
+
+La carga de mocks está deshabilitada por defecto y también en producción.
+
+Después de realizar las pruebas, se recomienda configurar:
+
+```dotenv
+MOCK_SEED_ENABLED=false
+```
+
+**El endpoint no incluye autenticación.** No debe habilitarse en servidores públicos ni utilizarse con bases de datos de producción.
+
+## Módulo 3 — Manejo profesional de errores
+
+Se implementó una capa centralizada para gestionar los errores de la API y devolver respuestas HTTP uniformes.
+
+El objetivo es evitar que cada controller o ruta construya respuestas de error de manera independiente.
+
+### Estructura del sistema de errores
+
+- `src/errors/errorDictionary.js`: contiene los códigos de error, mensajes y estados HTTP.
+- `src/errors/AppError.js`: define la clase base de errores y errores personalizados.
+- `src/middlewares/errorHandler.js`: middleware global encargado de transformar los errores en respuestas HTTP.
+- `src/services/`: contiene las validaciones y genera errores cuando se incumplen reglas de negocio.
+
+Los controllers envían los errores al middleware mediante `next`, mientras que los services detectan los casos inválidos.
+
+### Formato de respuesta de error
+
+Todos los errores HTTP utilizan la siguiente estructura JSON:
 
 ```json
 {
-  "inserted": { "users": 10, "drivers": 4, "orders": 10, "deliveries": 10 },
-  "total": 34,
-  "ids": { "users": ["..."], "orders": ["..."], "deliveries": ["..."] }
+  "status": "error",
+  "code": "INVALID_MOCK_QUANTITY",
+  "message": "qty debe ser un entero entre 1 y 50"
 }
 ```
 
-La carga utiliza `insertMany` a través del Repository y, en caso de fallo, intenta eliminar los documentos de ese lote. **No es una transacción MongoDB**, así que no ofrece atomicidad completa. Cada ejecución genera emails únicos de ejemplo (`example.test`), crea contraseñas aleatorias hasheadas y no envía emails reales.
+Los campos representan:
 
-## Relaciones y reglas
+- `status`: indica que ocurrió un error.
+- `code`: identifica el tipo de error.
+- `message`: describe el problema de forma comprensible.
 
-- `User` usa roles congelados (`USER`, `DRIVER`, `ADMIN`); los repartidores son usuarios con rol `DRIVER`.
-- `Order.customer` referencia al cliente y sus campos `status` y `priority` usan constantes compartidas.
-- `Delivery.order` referencia un pedido existente. `Delivery.driver` apunta a un usuario `DRIVER` o es `null` para entregas sin asignar.
-- `Repository` es el único acceso a Mongoose. `Service` genera y valida datos; `Controller` gestiona HTTP; `Routes` solo conecta paths con controladores.
-- Se mantiene la validación de entorno del Módulo 1. No hay llamadas `process.env` fuera de `src/config/env.config.js`.
+El estado HTTP correspondiente se envía en la respuesta.
 
-## Seguridad / alcance
+### Errores personalizados
 
-Se trata de un ejercicio educativo. El endpoint seed está bloqueado por defecto y en producción, pero **no incluye autenticación**. No publicar la API con `MOCK_SEED_ENABLED=true` en un servidor accesible a terceros. Usar una base MongoDB de pruebas separada, nunca la de producción. Antes de cargar, asegurarse de apuntar a la base de desarrollo correcta.
+Entre los códigos implementados se encuentran:
 
-Se excluyen de Git `.env`, `node_modules`, archivos de log y coberturas mediante `.gitignore`.
+| Código | HTTP | Descripción |
+|---|---|---|
+| `USER_NOT_FOUND` | 404 | Usuario inexistente |
+| `PRODUCT_NOT_FOUND` | 404 | Producto inexistente |
+| `ORDER_NOT_FOUND` | 404 | Pedido inexistente |
+| `INVALID_DATA` | 400 | Datos inválidos |
+| `INVALID_STATUS` | 400 | Estado inválido |
+| `INVALID_MOCK_QUANTITY` | 400 | Cantidad de mocks inválida |
+| `INVALID_MOCK_TYPE` | 400 | Tipo de mock inválido |
+| `DUPLICATE_RESOURCE` | 409 | Recurso duplicado |
+| `MOCKS_DISABLED` | 403 | Mocks no disponibles en producción |
+| `MOCK_SEED_DISABLED` | 403 | Inserción de mocks deshabilitada |
+| `MOCK_SEED_FAILED` | 500 | Falla durante la inserción de mocks |
+| `ROUTE_NOT_FOUND` | 404 | Ruta inexistente |
+| `INTERNAL_ERROR` | 500 | Error interno inesperado |
+
+Algunos errores representan situaciones del dominio y otros permiten controlar fallas técnicas.
+
+### Cómo probar el manejo de errores
+
+Primero, iniciar el servidor:
+
+```bash
+npm run dev
+```
+
+Abrir otra terminal para ejecutar las solicitudes de prueba.
+
+**1. Ruta inexistente — HTTP 404**
+
+```bash
+curl -i "http://localhost:8080/api/ruta-inexistente"
+```
+
+Respuesta esperada:
+
+```json
+{
+  "status": "error",
+  "code": "ROUTE_NOT_FOUND",
+  "message": "Ruta no encontrada"
+}
+```
+
+**2. Cantidad negativa de mocks — HTTP 400**
+
+```bash
+curl -i "http://localhost:8080/api/mocks/users?qty=-5"
+```
+
+Respuesta esperada:
+
+```json
+{
+  "status": "error",
+  "code": "INVALID_MOCK_QUANTITY",
+  "message": "qty debe ser un entero entre 1 y 50"
+}
+```
+
+**3. Cantidad superior al máximo permitido — HTTP 400**
+
+```bash
+curl -i "http://localhost:8080/api/mocks/users?qty=100"
+```
+
+**4. Cantidad no numérica — HTTP 400**
+
+```bash
+curl -i "http://localhost:8080/api/mocks/users?qty=abc"
+```
+
+**5. Carga de mocks deshabilitada — HTTP 403**
+
+Con `MOCK_SEED_ENABLED=false`:
+
+```bash
+curl -i -X POST "http://localhost:8080/api/mocks/seed" \
+  -H "Content-Type: application/json" \
+  -d '{"qty":2}'
+```
+
+Respuesta esperada:
+
+```json
+{
+  "status": "error",
+  "code": "MOCK_SEED_DISABLED",
+  "message": "Carga de prueba deshabilitada"
+}
+```
+
+### Manejo de errores de MongoDB y Mongoose
+
+El middleware global reconoce errores habituales de la base de datos:
+
+| Error | HTTP | Código de respuesta |
+|---|---|---|
+| `CastError` | 400 | `INVALID_DATA` |
+| `ValidationError` | 400 | `INVALID_DATA` |
+| Código MongoDB `11000` | 409 | `DUPLICATE_RESOURCE` |
+| Error inesperado | 500 | `INTERNAL_ERROR` |
+
+Si el repositorio falla durante una carga de mocks, el servicio transforma la falla en `MOCK_SEED_FAILED`, con estado HTTP 500.
+
+Los errores inesperados no exponen contraseñas, cadenas de conexión ni detalles internos en las respuestas HTTP.
+
+### Pruebas automatizadas
+
+Ejecutar:
+
+```bash
+npm test
+```
+
+Las pruebas incluyen:
+
+- Validación de variables de entorno.
+- Protección de constantes.
+- Coherencia de relaciones entre mocks.
+- Errores personalizados de usuarios y productos.
+- Validación de cantidades negativas.
+- Formato uniforme del middleware.
+- Respuesta segura ante errores inesperados.
+- Definición del error de carga de mocks.
+
+En la última ejecución se obtuvieron **10 pruebas aprobadas y 0 fallidas**.
+
+## Repositorio y entrega
+
+El proyecto se entrega mediante el mismo repositorio de GitHub utilizado en los módulos anteriores:
+
+https://github.com/jimewaisberg/ShipNow-Entrega
+
+El archivo `.gitignore` excluye `node_modules`, `.env`, logs y otros archivos que no deben publicarse.
+
+El proyecto es educativo y utiliza una base de datos MongoDB de desarrollo para las pruebas de persistencia.
