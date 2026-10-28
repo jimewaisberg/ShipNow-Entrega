@@ -4,6 +4,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const connectDB = require('./config/database');
 const logger = require('./config/logger');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
+
 
 const { AppError } = require('./errors/AppError');
 const errorHandler = require('./middlewares/errorHandler');
@@ -11,6 +14,8 @@ const errorHandler = require('./middlewares/errorHandler');
 const app = express();
 
 app.use(express.json());
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 app.get('/health', (req, res) => {
   res.json({

@@ -8,6 +8,7 @@ El proyecto incluye las pre-entregas correspondientes a los siguientes módulos:
 - **Módulo 2:** Generación de datos ficticios (mocks) para realizar pruebas.
 - **Módulo 3:** Manejo profesional y centralizado de errores mediante errores personalizados y un middleware global.
 - **Módulo 4:** Logging y monitoreo básico con Winston, persistencia de errores y rotación automática de archivos.
+- **Módulo 5:** Documentación profesional de la API con Swagger UI y OpenAPI.
 
 ## Módulo 1 — Arquitectura por capas
 
@@ -417,3 +418,99 @@ según el entorno y la existencia de los transportes de consola
 y archivos rotativos.
 
 En la última ejecución se obtuvieron 14 pruebas aprobadas.
+
+## Módulo 5 — Documentación de API con Swagger
+
+ShipNow API incorpora documentación interactiva mediante
+Swagger UI y OpenAPI 3.0.3.
+
+### Herramientas utilizadas
+
+- swagger-ui-express
+- swagger-jsdoc
+
+La configuración centralizada se encuentra en
+`src/config/swagger.js`.
+
+### Cómo iniciar el proyecto
+
+Instalar las dependencias:
+
+```bash
+npm install
+```
+
+Configurar las variables de entorno correspondientes,
+incluyendo `MONGODB_URI`.
+
+Iniciar el servidor:
+
+```bash
+npm run dev
+```
+
+### Acceder a Swagger UI
+
+Con el servidor funcionando, abrir:
+
+http://localhost:8080/api/docs
+
+Desde Swagger UI se pueden consultar los endpoints,
+sus parámetros, ejemplos de respuestas y errores.
+
+También se pueden realizar peticiones mediante
+la opción "Try it out".
+
+### Módulos documentados
+
+- Users: gestión de usuarios.
+- Products: gestión de productos y paginación.
+- Orders: generación de pedidos ficticios.
+- Deliveries: generación de entregas ficticias.
+- Mocks: generación y carga controlada de datos de prueba.
+- Logger: endpoint interno para validar Winston.
+
+La documentación incluye 17 operaciones HTTP.
+
+### Schemas reutilizables
+
+Se definen schemas para:
+
+- User, CreateUser y UpdateUser.
+- Product, CreateProduct y UpdateProduct.
+- Order, Delivery y OrderItem.
+- ErrorResponse y SuccessResponse.
+
+OrderItem es un schema de referencia.
+El modelo actual de pedidos todavía no almacena ítems.
+
+### Consideraciones para las pruebas
+
+Los endpoints GET de mocks generan datos ficticios
+sin guardarlos en MongoDB.
+
+La ruta POST /api/mocks/seed inserta documentos reales
+y solo funciona fuera de producción cuando
+MOCK_SEED_ENABLED=true.
+
+Los endpoints POST, PUT y DELETE de usuarios y
+productos modifican la base de datos.
+
+GET /api/logger/test permite validar los niveles
+de Winston en desarrollo. En producción devuelve 404.
+
+Los pedidos y entregas se documentan a través de
+las rutas existentes de mocks. Actualmente no hay
+rutas CRUD independientes para estas entidades.
+
+### Pruebas automatizadas
+
+Ejecutar:
+
+```bash
+npm test
+```
+
+El proyecto cuenta con 18 pruebas aprobadas,
+incluyendo verificaciones de configuración,
+tags, operaciones y schemas de Swagger.
