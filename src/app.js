@@ -3,6 +3,7 @@ const config = require('./config/env.config');
 const express = require('express');
 const mongoose = require('mongoose');
 const connectDB = require('./config/database');
+const logger = require('./config/logger');
 
 const { AppError } = require('./errors/AppError');
 const errorHandler = require('./middlewares/errorHandler');
@@ -21,6 +22,7 @@ app.get('/health', (req, res) => {
 app.use('/api/products', require('./routes/products'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/mocks', require('./routes/mocks'));
+app.use('/api/logger', require('./routes/logger'));
 
 // Las rutas inexistentes generan un error personalizado.
 app.use((req, res, next) => {
@@ -34,15 +36,15 @@ async function start() {
   await connectDB();
 
   return app.listen(config.port, () => {
-    console.log(
-      `ShipNow escuchando en puerto ${config.port} (${config.nodeEnv})`
+    logger.info(
+      `Servidor ShipNow escuchando en el puerto ${config.port} (${config.nodeEnv})`
     );
   });
 }
 
 if (require.main === module) {
   start().catch(async error => {
-    console.error('No se pudo iniciar ShipNow:', error.message);
+    logger.fatal(`No se pudo iniciar ShipNow: ${error.message}`);
     await mongoose.disconnect();
     process.exitCode = 1;
   });

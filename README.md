@@ -307,3 +307,108 @@ https://github.com/jimewaisberg/ShipNow-Entrega
 El archivo `.gitignore` excluye `node_modules`, `.env`, logs y otros archivos que no deben publicarse.
 
 El proyecto es educativo y utiliza una base de datos MongoDB de desarrollo para las pruebas de persistencia.
+
+## Módulo 4 — Logging y monitoreo básico
+
+ShipNow API utiliza Winston para registrar eventos internos del servidor
+de manera centralizada, manteniendo la arquitectura por capas.
+
+### Configuración
+
+El logger se encuentra en `src/config/logger.js`.
+
+Se utilizan las siguientes dependencias:
+
+- `winston`: gestión centralizada de logs.
+- `winston-daily-rotate-file`: persistencia y rotación automática.
+
+### Niveles de logging
+
+| Nivel | Uso |
+|---|---|
+| `debug` | Detalles de operaciones durante desarrollo |
+| `http` | Eventos relacionados con solicitudes HTTP |
+| `info` | Conexiones exitosas y operaciones completadas |
+| `warning` | Errores controlados y situaciones anormales |
+| `error` | Errores del servidor y fallas de operaciones |
+| `fatal` | Fallas críticas, como problemas al iniciar |
+
+### Desarrollo y producción
+
+El comportamiento depende de `NODE_ENV`:
+
+- `development`: registra todos los niveles, incluido `debug`.
+- `production`: registra desde `info` hasta `fatal`, evitando logs de depuración.
+
+### Integración con ShipNow
+
+El logger registra eventos importantes:
+
+- Inicio correcto del servidor.
+- Conexión exitosa o fallida a MongoDB.
+- Errores controlados mediante el middleware global.
+- Errores inesperados del servidor.
+- Generación de usuarios, pedidos y otros datos ficticios.
+- Carga de mocks en MongoDB y fallas durante su inserción.
+
+### Endpoint de prueba
+
+En desarrollo, iniciar el servidor:
+
+```bash
+npm run dev
+```
+
+Desde otra terminal:
+
+```bash
+curl -i "http://localhost:8080/api/logger/test"
+```
+
+Este endpoint genera un mensaje de prueba para cada nivel:
+`debug`, `http`, `info`, `warning`, `error` y `fatal`.
+
+En producción, el endpoint está bloqueado y responde con un error 404.
+
+### Persistencia de logs
+
+Los errores importantes se guardan en la carpeta `logs/`.
+
+Ejemplo de archivo:
+
+`logs/error-2026-10-28.log`
+
+El archivo registra únicamente los niveles `error` y `fatal`.
+
+Para consultar los logs del día:
+
+```bash
+cat logs/error-$(date +%Y-%m-%d).log
+```
+
+### Rotación de archivos
+
+Se utiliza `winston-daily-rotate-file`, configurado con:
+
+- Rotación diaria.
+- Tamaño máximo de 10 MB por archivo.
+- Conservación durante 14 días.
+
+Esto evita que los archivos de logs crezcan indefinidamente.
+
+La carpeta `logs/` está excluida del repositorio mediante `.gitignore`.
+También se excluyen `.env` y `node_modules`.
+
+### Pruebas automatizadas
+
+Ejecutar:
+
+```bash
+npm test
+```
+
+Las pruebas verifican los seis niveles de Winston, la configuración
+según el entorno y la existencia de los transportes de consola
+y archivos rotativos.
+
+En la última ejecución se obtuvieron 14 pruebas aprobadas.
