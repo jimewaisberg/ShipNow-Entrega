@@ -12,6 +12,10 @@ const ERROR_DICTIONARY = Object.freeze({
       statusCode: 404,
       message: 'Pedido no encontrado'
     },
+    DELIVERY_NOT_FOUND: {
+      statusCode: 404,
+      message: 'Entrega no encontrada'
+    },
     INVALID_DATA: {
       statusCode: 400,
       message: 'Los datos proporcionados son inválidos'

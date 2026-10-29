@@ -2,12 +2,12 @@
   "name": "shipnow-api",
   "version": "2.0.0",
   "private": true,
-  "description": "Pre-entrega Módulo 2: ShipNow con mocking y carga controlada de datos",
+  "description": "ShipNow API - Arquitectura por capas, mocks, manejo de errores, logging y documentacion Swagger",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
-    "test": "node --test"
+  "test": "node --require ./test/setup.js --test test/*.test.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

@@ -24,10 +24,15 @@ app.get('/health', (req, res) => {
   });
 });
 
+
 app.use('/api/products', require('./routes/products'));
 app.use('/api/users', require('./routes/users'));
+app.use('/api/orders', require('./routes/order.routes'));
+app.use('/api/deliveries', require('./routes/delivery.routes'));
 app.use('/api/mocks', require('./routes/mocks'));
 app.use('/api/logger', require('./routes/logger'));
+
+
 
 // Las rutas inexistentes generan un error personalizado.
 app.use((req, res, next) => {
