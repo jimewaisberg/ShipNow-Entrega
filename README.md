@@ -302,7 +302,7 @@ Las pruebas incluyen:
 - Respuesta segura ante errores inesperados.
 - Definición del error de carga de mocks.
 
-En la última ejecución se obtuvieron **10 pruebas aprobadas y 0 fallidas**.
+La suite actual del proyecto cuenta con 39 pruebas aprobadas y 0 fallidas, incluyendo las pruebas del manejo de errores.
 
 ## Repositorio y entrega
 
@@ -417,7 +417,7 @@ Las pruebas verifican los seis niveles de Winston, la configuración
 según el entorno y la existencia de los transportes de consola
 y archivos rotativos.
 
-En la última ejecución se obtuvieron 14 pruebas aprobadas.
+Las pruebas de Winston forman parte de la suite general del proyecto, que actualmente cuenta con 39 pruebas aprobadas y 0 fallidas.
 
 ## Módulo 5 — Documentación de API con Swagger
 
@@ -470,7 +470,7 @@ la opción "Try it out".
 - Mocks: generación y carga controlada de datos de prueba.
 - Logger: endpoint interno para validar Winston.
 
-La documentación incluye 17 operaciones HTTP.
+La documentación incluye 25 operaciones HTTP.
 
 ### Schemas reutilizables
 
@@ -511,6 +511,57 @@ Ejecutar:
 npm test
 ```
 
-El proyecto cuenta con 18 pruebas aprobadas,
+El proyecto cuenta con 39 pruebas aprobadas,
 incluyendo verificaciones de configuración,
 tags, operaciones y schemas de Swagger.
+
+Las pruebas automatizadas utilizan `test/setup.js` para configurar las variables `PORT`, `NODE_ENV`, `MONGODB_URI` y `MOCK_SEED_ENABLED` antes de ejecutarse.
+
+Esto permite ejecutar `npm test` sin configurar manualmente las variables de entorno para las pruebas. No es necesario conectarse a MongoDB Atlas para ejecutar la suite actual.
+
+La última ejecución registró **39 pruebas aprobadas y 0 fallidas**.
+
+## Ampliación de entidades — Orders y Deliveries
+
+Se incorporaron endpoints REST para administrar pedidos y entregas, siguiendo la arquitectura por capas utilizada en ShipNow:
+
+Routes → Controllers → Services → Repositories → Models.
+
+### Endpoints de pedidos
+
+| Método | Endpoint | Descripción |
+|---|---|---|
+| GET | `/api/orders` | Obtener todos los pedidos |
+| GET | `/api/orders/:id` | Obtener un pedido por ID |
+| POST | `/api/orders` | Crear un pedido |
+| PUT | `/api/orders/:id` | Actualizar estado o prioridad |
+
+Los pedidos incluyen cliente, total, estado y prioridad.
+
+### Endpoints de entregas
+
+| Método | Endpoint | Descripción |
+|---|---|---|
+| GET | `/api/deliveries` | Obtener todas las entregas |
+| GET | `/api/deliveries/:id` | Obtener una entrega por ID |
+| POST | `/api/deliveries` | Crear una entrega |
+| PUT | `/api/deliveries/:id` | Actualizar una entrega |
+
+Cada entrega se relaciona con un pedido y puede tener un repartidor asignado.
+
+### Mejora del rollback de mocks
+
+Se reorganizó la lógica de compensación del seed para utilizar los identificadores de los documentos generados durante cada ejecución.
+
+La eliminación se realiza en orden: entregas, pedidos y usuarios.
+
+Se incorporaron pruebas automatizadas del orden de limpieza y del manejo de errores. Esta estrategia no reemplaza una transacción de MongoDB.
+
+### Pruebas y documentación
+
+- 39 pruebas automatizadas aprobadas.
+- 0 pruebas fallidas.
+- 25 operaciones HTTP documentadas con Swagger.
+- Pruebas de validación para Orders y Deliveries.
+- Prueba HTTP de manejo de errores.
+- Pruebas de rollback mediante operaciones simuladas.
