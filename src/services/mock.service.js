@@ -1,7 +1,7 @@
 
 const { randomUUID } = require('node:crypto');
 const { generate, quantity } = require('./mock.generator');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const repo = require('../repositories/mock.repository');
 const { AppError } = require('../errors/AppError');
 const config = require('../config/env.config');

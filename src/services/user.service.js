@@ -1,5 +1,5 @@
 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const repository = require('../repositories/user.repository');
 const { USER_ROLES } = require('../constants');
 const { AppError, UserNotFoundError } = require('../errors/AppError');
