@@ -1,7 +1,7 @@
 
 const repository = require('../repositories/product.repository');
-const { PRODUCT_STATUS } = require('../constants');
 const { AppError, ProductNotFoundError } = require('../errors/AppError');
+const { withProductAvailability } = require('../constants/productAvailability');
 
 const validateStock = stock => {
   if (!Number.isInteger(stock) || stock < 0) {
@@ -33,12 +33,7 @@ class ProductService {
     const result = await repository.getAll({ page, limit, sort, filter });
 
     return {
-      products: result.docs.map(p => ({
-        ...p,
-        stockStatus: p.stock > 0
-          ? PRODUCT_STATUS.AVAILABLE
-          : PRODUCT_STATUS.OUT_OF_STOCK
-      })),
+      products: result.docs.map(withProductAvailability),
       pagination: {
         page: result.page,
         limit: result.limit,
@@ -55,7 +50,7 @@ class ProductService {
       throw new ProductNotFoundError();
     }
 
-    return item;
+    return withProductAvailability(item);
   }
 
   async create(data) {
@@ -80,7 +75,11 @@ class ProductService {
       throw new AppError('DUPLICATE_RESOURCE', 'Código de producto duplicado');
     }
 
-    return repository.create({ ...data, status: stock > 0 });
+    const { status, stockStatus, ...productData } = data;
+
+    const created = await repository.create(productData);
+
+    return withProductAvailability(created.toObject());
   }
 
   async update(id, data) {
@@ -104,7 +103,6 @@ class ProductService {
 
     if ('stock' in changes) {
       validateStock(changes.stock);
-      changes.status = changes.stock > 0;
     }
 
     if (
@@ -131,8 +129,10 @@ class ProductService {
       throw new ProductNotFoundError();
     }
 
-    return updated;
+    return withProductAvailability(updated.toObject());
   }
+
+
 
   async delete(id) {
     const deleted = await repository.delete(id);
@@ -141,8 +141,9 @@ class ProductService {
       throw new ProductNotFoundError();
     }
 
-    return deleted;
+    return withProductAvailability(deleted.toObject());
   }
+
 }
 
 module.exports = new ProductService();

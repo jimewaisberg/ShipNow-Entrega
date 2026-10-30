@@ -302,7 +302,7 @@ Las pruebas incluyen:
 - Respuesta segura ante errores inesperados.
 - Definición del error de carga de mocks.
 
-La suite actual del proyecto cuenta con 39 pruebas aprobadas y 0 fallidas, incluyendo las pruebas del manejo de errores.
+La suite actual del proyecto cuenta con 51 pruebas aprobadas y 0 fallidas, incluyendo las pruebas del manejo de errores.
 
 ## Repositorio y entrega
 
@@ -417,7 +417,7 @@ Las pruebas verifican los seis niveles de Winston, la configuración
 según el entorno y la existencia de los transportes de consola
 y archivos rotativos.
 
-Las pruebas de Winston forman parte de la suite general del proyecto, que actualmente cuenta con 39 pruebas aprobadas y 0 fallidas.
+Las pruebas de Winston forman parte de la suite general del proyecto, que actualmente cuenta con 51 pruebas aprobadas y 0 fallidas.
 
 ## Módulo 5 — Documentación de API con Swagger
 
@@ -511,7 +511,7 @@ Ejecutar:
 npm test
 ```
 
-El proyecto cuenta con 39 pruebas aprobadas,
+El proyecto cuenta con 51 pruebas aprobadas,
 incluyendo verificaciones de configuración,
 tags, operaciones y schemas de Swagger.
 
@@ -519,7 +519,7 @@ Las pruebas automatizadas utilizan `test/setup.js` para configurar las variables
 
 Esto permite ejecutar `npm test` sin configurar manualmente las variables de entorno para las pruebas. No es necesario conectarse a MongoDB Atlas para ejecutar la suite actual.
 
-La última ejecución registró **39 pruebas aprobadas y 0 fallidas**.
+La última ejecución registró **51 pruebas aprobadas y 0 fallidas**.
 
 ## Ampliación de entidades — Orders y Deliveries
 
@@ -559,7 +559,7 @@ Se incorporaron pruebas automatizadas del orden de limpieza y del manejo de erro
 
 ### Pruebas y documentación
 
-- 39 pruebas automatizadas aprobadas.
+- 51 pruebas automatizadas aprobadas.
 - 0 pruebas fallidas.
 - 25 operaciones HTTP documentadas con Swagger.
 - Pruebas de validación para Orders y Deliveries.

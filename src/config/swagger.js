@@ -318,16 +318,27 @@ const options = {
               minimum: 0,
               example: 25000
             },
-            status: {
-              type: 'boolean',
-              description: 'Indica la disponibilidad del producto.',
-              example: true
-            },
-            stock: {
-              type: 'integer',
-              minimum: 0,
-              example: 15
-            },
+
+stock: {
+    type: 'integer',
+    minimum: 0,
+    description: 'Cantidad disponible. Fuente única de verdad para calcular la disponibilidad.',
+    example: 15
+  },
+  status: {
+    type: 'boolean',
+    readOnly: true,
+    description: 'Disponibilidad calculada a partir del stock. No se almacena en MongoDB.',
+    example: true
+  },
+  stockStatus: {
+    type: 'string',
+    readOnly: true,
+    enum: ['AVAILABLE', 'OUT_OF_STOCK'],
+    description: 'Estado calculado a partir del stock utilizando PRODUCT_STATUS.',
+    example: 'AVAILABLE'
+  },
+
             category: {
               type: 'string',
               example: 'Electrónica'
