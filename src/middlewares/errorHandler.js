@@ -19,20 +19,45 @@ function errorHandler(err, req, res, next) {
 
   const isKnownError = error instanceof AppError;
   const statusCode = isKnownError ? error.statusCode : 500;
+  const errorCode = isKnownError ? error.code : 'INTERNAL_ERROR';
 
-  if (statusCode >= 500) {
-    logger.error(
-      `Error del servidor: ${isKnownError ? error.code : 'INTERNAL_ERROR'}`
-    );
-  } else {
-    logger.warning(
-      `Error controlado: ${error.code} - ${req.method} ${req.originalUrl}`
-    );
-  }
+  const method = req?.method || 'UNKNOWN';
+  const route = req?.originalUrl || req?.url || 'UNKNOWN';
+
+  const context = [
+    `code=${errorCode}`,
+    `status=${statusCode}`,
+    `method=${method}`,
+    `route=${route}`
+  ].join(' | ');
+
+  // El stack completo se registra para errores del servidor.
+  // Se mantiene fuera de la respuesta HTTP.
+
+if (statusCode >= 500) {
+  const stack = typeof err.stack === 'string'
+    ? err.stack
+    : '';
+
+  // Conservamos las ubicaciones del stack, pero no
+  // su primera línea, que puede contener credenciales.
+  const safeStack = stack
+    .split('\n')
+    .slice(1)
+    .filter(line => /^\s+at\s/.test(line))
+    .join('\n');
+
+  logger.error(
+    `${context}${safeStack ? '\n' + safeStack : ''}`
+  );
+} else {
+  logger.warning(context);
+}
+
 
   return res.status(statusCode).json({
     status: 'error',
-    code: isKnownError ? error.code : 'INTERNAL_ERROR',
+    code: errorCode,
     message: isKnownError
       ? error.message
       : 'Error interno del servidor'

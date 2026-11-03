@@ -177,3 +177,49 @@ test('si falla la inserción de mocks, el servicio genera MOCK_SEED_FAILED', () 
     });
   });
 });
+
+test('el logger registra contexto sin exponer credenciales del error', () => {
+    const logger = require('../src/config/logger');
+    const originalError = logger.error;
+    const captured = [];
+
+    try {
+      logger.error = message => captured.push(message);
+
+      const errorHandler = require('../src/middlewares/errorHandler');
+
+      const error = new Error(
+        'mongodb+srv://usuario:password@cluster'
+      );
+
+      const req = {
+        method: 'GET',
+        originalUrl: '/api/products'
+      };
+
+      const res = {
+        headersSent: false,
+        status(code) {
+          this.statusCode = code;
+          return this;
+        },
+        json(body) {
+          this.body = body;
+          return this;
+        }
+      };
+
+      errorHandler(error, req, res, () => {});
+
+      assert.equal(res.statusCode, 500);
+      assert.equal(res.body.code, 'INTERNAL_ERROR');
+
+      assert.equal(captured.length, 1);
+      assert.match(captured[0], /status=500/);
+      assert.match(captured[0], /method=GET/);
+      assert.match(captured[0], /route=\/api\/products/);
+      assert.doesNotMatch(captured[0], /usuario:password/);
+    } finally {
+      logger.error = originalError;
+    }
+  });
