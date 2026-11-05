@@ -37,3 +37,16 @@ describe('Mocks - Seed real en MongoDB temporal', function () {
     ctx.expect(users).to.be.greaterThan(0);
   });
 });
+
+describe('Mocks - Validación del seed habilitado', function () {
+  it('POST /api/mocks/seed rechaza cantidades inválidas', async function () {
+    const response = await request(ctx.app)
+      .post('/api/mocks/seed')
+      .send({ qty: 0 });
+
+    ctx.expect(response.status).to.equal(400);
+    ctx.expect(response.body.status).to.equal('error');
+    ctx.expect(response.body.code).to.equal('INVALID_MOCK_QUANTITY');
+    ctx.expect(response.body.message).to.be.a('string').and.not.empty;
+  });
+});

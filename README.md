@@ -629,9 +629,9 @@ Al finalizar, se cierra la conexión y se detiene MongoDB en memoria.
 ### Resultados
 
 - 52 pruebas anteriores aprobadas.
-- 19 pruebas funcionales generales aprobadas.
-- 1 prueba funcional de inserción real aprobada.
-- Total: 72 pruebas aprobadas y 0 fallidas.
+- 25 pruebas funcionales generales aprobadas.
+- 2 pruebas funcionales de inserción y validación aprobadas.
+- Total: 79 pruebas aprobadas y 0 fallidas.
 
 Las pruebas funcionales se ejecutaron varias veces consecutivas
 sin necesidad de limpiar datos manualmente.
