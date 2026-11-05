@@ -1,9 +1,6 @@
 
 const config = require('./config/env.config');
 const express = require('express');
-const mongoose = require('mongoose');
-const connectDB = require('./config/database');
-const logger = require('./config/logger');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
 
@@ -42,15 +39,7 @@ app.use((req, res, next) => {
 // Todos los errores HTTP se responden desde este middleware.
 app.use(errorHandler);
 
-async function start() {
-  await connectDB();
-
-  return app.listen(config.port, () => {
-    logger.info(
-      `Servidor ShipNow escuchando en el puerto ${config.port} (${config.nodeEnv})`
-    );
-  });
-}
+module.exports = app;
 
 if (require.main === module) {
   start().catch(async error => {
@@ -59,5 +48,3 @@ if (require.main === module) {
     process.exitCode = 1;
   });
 }
-
-module.exports = { app, start };

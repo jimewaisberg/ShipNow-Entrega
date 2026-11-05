@@ -565,3 +565,73 @@ Se incorporaron pruebas automatizadas del orden de limpieza y del manejo de erro
 - Pruebas de validación para Orders y Deliveries.
 - Prueba HTTP de manejo de errores.
 - Pruebas de rollback mediante operaciones simuladas.
+
+## Módulo 6 — Testing funcional
+
+### Herramientas utilizadas
+
+- Mocha: organización y ejecución de pruebas funcionales.
+- Chai: validación de respuestas.
+- Supertest: solicitudes HTTP a Express.
+- mongodb-memory-server: base MongoDB temporal y aislada.
+
+### Ejecución de pruebas
+
+Instalar dependencias:
+
+    npm install
+
+Ejecutar todas las pruebas:
+
+    npm test
+
+Ejecutar las suites por separado:
+
+    npm run test:unit
+    npm run test:functional
+    npm run test:functional:seed
+
+### Cobertura
+
+Los tests funcionales verifican:
+
+- Usuarios: listado, creación y datos inválidos.
+- Pedidos: listado, creación, consulta por ID y actualización de estados.
+- Mocks: generación, cantidades inválidas e inserción de datos.
+- Logger: endpoint de prueba.
+- Swagger: acceso a la documentación.
+- Sistema: health y rutas inexistentes.
+
+Se validan códigos HTTP, estructura JSON y propiedades de las respuestas.
+
+### Entorno de testing
+
+Los tests funcionales utilizan NODE_ENV=test y MongoDB en memoria.
+
+Variables utilizadas:
+
+- NODE_ENV=test
+- PORT=8080
+- MONGODB_URI: generada automáticamente por mongodb-memory-server.
+- MOCK_SEED_ENABLED=false en los tests generales.
+- TEST_ENABLE_SEED=1 en la prueba aislada de inserción.
+
+No se requiere MongoDB Atlas ni una base de desarrollo para ejecutar
+los tests funcionales.
+
+### Limpieza de datos
+
+Los tests utilizan datos ficticios y controlados.
+
+Los hooks de Mocha permiten preparar y limpiar la base temporal.
+Al finalizar, se cierra la conexión y se detiene MongoDB en memoria.
+
+### Resultados
+
+- 52 pruebas anteriores aprobadas.
+- 19 pruebas funcionales generales aprobadas.
+- 1 prueba funcional de inserción real aprobada.
+- Total: 72 pruebas aprobadas y 0 fallidas.
+
+Las pruebas funcionales se ejecutaron varias veces consecutivas
+sin necesidad de limpiar datos manualmente.

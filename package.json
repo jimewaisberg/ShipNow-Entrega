@@ -5,9 +5,12 @@
   "description": "ShipNow API - Arquitectura por capas, mocks, manejo de errores, logging y documentacion Swagger",
   "main": "src/app.js",
   "scripts": {
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js",
-    "test": "node --require ./test/setup.js --test test/*.test.js"
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "npm run test:unit && npm run test:functional",
+    "test:unit": "node --require ./test/setup.js --test test/*.test.js",
+    "test:functional": "mocha --require ./tests/support.cjs --timeout 120000 \"tests/*.test.cjs\" && npm run test:functional:seed",
+    "test:functional:seed": "TEST_ENABLE_SEED=1 mocha --require ./tests/support.cjs --timeout 120000 tests/seed.integration.cjs"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
@@ -21,6 +24,10 @@
     "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "chai": "^6.3.0",
+    "mocha": "^12.0.3",
+    "mongodb-memory-server": "^11.3.0",
+    "nodemon": "^3.1.14",
+    "supertest": "^7.3.1"
   }
 }
