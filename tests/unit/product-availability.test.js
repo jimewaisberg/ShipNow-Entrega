@@ -2,11 +2,11 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 
-const Product = require('../src/models/Product');
+const Product = require('../../src/models/Product');
 const {
   getProductAvailability,
   withProductAvailability
-} = require('../src/constants/productAvailability');
+} = require('../../src/constants/productAvailability');
 
 test('Product no persiste status como campo independiente', () => {
   assert.equal(Product.schema.path('status'), undefined);

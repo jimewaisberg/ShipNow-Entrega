@@ -1,7 +1,7 @@
 
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const swagger = require('../src/config/swagger');
+const swagger = require('../../src/config/swagger');
 
 test('Swagger utiliza OpenAPI 3', () => {
   assert.equal(swagger.openapi, '3.0.3');
@@ -23,13 +23,13 @@ test('Swagger tiene los tags requeridos', () => {
   }
 });
 
-test('Swagger documenta las 25 operaciones', () => {
+test('Swagger documenta las 27 operaciones', () => {
   const total = Object.values(swagger.paths).reduce(
     (count, path) => count + Object.keys(path).length,
     0
   );
 
-  assert.equal(total, 25);
+  assert.equal(total, 27);
 
   // Endpoints de los módulos anteriores
   assert.ok(swagger.paths['/api/mocks/drivers']?.get);

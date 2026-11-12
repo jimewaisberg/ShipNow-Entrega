@@ -6,3 +6,9 @@ node_modules/
 coverage/
 *.log
 logs/
+
+# Archivos cargados por la API
+uploads/
+
+# Copias de seguridad temporales
+*.bak

@@ -1,7 +1,7 @@
 
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const app = require('../src/app');
+const app = require('../../src/app');
 
 test('Orders y Deliveries responden correctamente por HTTP', async () => {
   const server = app.listen(0);

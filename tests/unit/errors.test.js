@@ -9,10 +9,10 @@ const {
   UserNotFoundError,
   ProductNotFoundError,
   InvalidMockQuantityError
-} = require('../src/errors/AppError');
+} = require('../../src/errors/AppError');
 
-const { quantity } = require('../src/services/mock.generator');
-const errorHandler = require('../src/middlewares/errorHandler');
+const { quantity } = require('../../src/services/mock.generator');
+const errorHandler = require('../../src/middlewares/errorHandler');
 
 // Prueba 1: usuario inexistente
 test('usuario inexistente genera error personalizado 404', () => {
@@ -133,7 +133,7 @@ test('error de carga de mocks tiene código y estado correctos', () => {
 
 // Prueba 7: simulación de una falla real en el repositorio de mocks
 test('si falla la inserción de mocks, el servicio genera MOCK_SEED_FAILED', () => {
-  const projectRoot = path.resolve(__dirname, '..');
+  const projectRoot = path.resolve(__dirname, '..', '..');
 
   const script = `
     const assert = require('node:assert/strict');
@@ -179,14 +179,14 @@ test('si falla la inserción de mocks, el servicio genera MOCK_SEED_FAILED', () 
 });
 
 test('el logger registra contexto sin exponer credenciales del error', () => {
-    const logger = require('../src/config/logger');
+    const logger = require('../../src/config/logger');
     const originalError = logger.error;
     const captured = [];
 
     try {
       logger.error = message => captured.push(message);
 
-      const errorHandler = require('../src/middlewares/errorHandler');
+      const errorHandler = require('../../src/middlewares/errorHandler');
 
       const error = new Error(
         'mongodb+srv://usuario:password@cluster'

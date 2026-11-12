@@ -32,6 +32,9 @@ app.use('/api/logger', require('./routes/logger'));
 
 
 // Las rutas inexistentes generan un error personalizado.
+app.use('/api', require('./routes/upload.routes'));
+
+// Las rutas inexistentes generan un error personalizado.
 app.use((req, res, next) => {
   next(new AppError('ROUTE_NOT_FOUND'));
 });
@@ -40,11 +43,3 @@ app.use((req, res, next) => {
 app.use(errorHandler);
 
 module.exports = app;
-
-if (require.main === module) {
-  start().catch(async error => {
-    logger.fatal(`No se pudo iniciar ShipNow: ${error.message}`);
-    await mongoose.disconnect();
-    process.exitCode = 1;
-  });
-}

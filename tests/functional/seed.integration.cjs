@@ -1,7 +1,7 @@
 const { describe, it, beforeEach, afterEach } = require('mocha');
 const request = require('supertest');
 const mongoose = require('mongoose');
-const ctx = require('./support.cjs');
+const ctx = require('../support.cjs');
 
 describe('Mocks - Seed real en MongoDB temporal', function () {
   beforeEach(async function () {

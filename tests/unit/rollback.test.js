@@ -2,7 +2,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 
-const repository = require('../src/repositories/mock.repository');
+const repository = require('../../src/repositories/mock.repository');
 
 test('rollback elimina entregas, pedidos y usuarios en orden', async () => {
   const calls = [];
@@ -112,9 +112,9 @@ test('rollback continúa limpiando si falla una eliminación', async () => {
 });
 
 test('seed ejecuta rollback si falla una inserción parcial', async () => {
-    const User = require('../src/models/User');
-    const Order = require('../src/models/Order');
-    const Delivery = require('../src/models/Delivery');
+    const User = require('../../src/models/User');
+    const Order = require('../../src/models/Order');
+    const Delivery = require('../../src/models/Delivery');
   
     const originalInsertUsers = User.insertMany;
     const originalInsertOrders = Order.insertMany;

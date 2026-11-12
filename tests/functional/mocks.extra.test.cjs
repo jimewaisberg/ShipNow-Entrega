@@ -1,6 +1,6 @@
 const { describe, it } = require('mocha');
 const request = require('supertest');
-const ctx = require('./support.cjs');
+const ctx = require('../support.cjs');
 
 describe('Mocks - Cobertura adicional', function () {
 

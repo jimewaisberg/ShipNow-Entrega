@@ -3,8 +3,8 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const bcrypt = require('bcryptjs');
 
-const userService = require('../src/services/user.service');
-const userRepository = require('../src/repositories/user.repository');
+const userService = require('../../src/services/user.service');
+const userRepository = require('../../src/repositories/user.repository');
 
 const validUser = {
   first_name: 'Ana',

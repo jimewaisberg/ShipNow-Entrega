@@ -1,7 +1,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { generate, quantity } = require('../src/services/mock.generator');
-const { USER_ROLES, ORDER_STATUS, ORDER_PRIORITY, DELIVERY_STATUS } = require('../src/constants');
+const { generate, quantity } = require('../../src/services/mock.generator');
+const { USER_ROLES, ORDER_STATUS, ORDER_PRIORITY, DELIVERY_STATUS } = require('../../src/constants');
 test('qty: solo enteros en el rango permitido', () => {
   assert.equal(quantity(undefined), 5);
   assert.equal(quantity('10'), 10);

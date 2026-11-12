@@ -2,8 +2,8 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 
-const orderService = require('../src/services/order.service');
-const { AppError } = require('../src/errors/AppError');
+const orderService = require('../../src/services/order.service');
+const { AppError } = require('../../src/errors/AppError');
 
 test('Orders rechaza un ID de pedido inválido', async () => {
   await assert.rejects(
@@ -68,8 +68,8 @@ test('Orders rechaza un ID de cliente inválido', async () => {
 });
 
 test('Orders crea un pedido válido con estado PENDING', async () => {
-    const userRepository = require('../src/repositories/user.repository');
-    const orderRepository = require('../src/repositories/order.repository');
+    const userRepository = require('../../src/repositories/user.repository');
+    const orderRepository = require('../../src/repositories/order.repository');
   
     const originalGetById = userRepository.getById;
     const originalCreate = orderRepository.create;
@@ -104,7 +104,7 @@ test('Orders crea un pedido válido con estado PENDING', async () => {
   });
   
   test('Orders actualiza correctamente un pedido', async () => {
-    const orderRepository = require('../src/repositories/order.repository');
+    const orderRepository = require('../../src/repositories/order.repository');
     const originalUpdate = orderRepository.update;
   
     try {

@@ -1,7 +1,7 @@
 
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const logger = require('../src/config/logger');
+const logger = require('../../src/config/logger');
 
 test('Winston tiene los seis niveles requeridos', () => {
   assert.deepEqual(logger.levels, {
@@ -15,7 +15,7 @@ test('Winston tiene los seis niveles requeridos', () => {
 });
 
 test('Winston utiliza el nivel adecuado según el entorno', () => {
-  const config = require('../src/config/env.config');
+  const config = require('../../src/config/env.config');
 
   assert.equal(
     logger.level,

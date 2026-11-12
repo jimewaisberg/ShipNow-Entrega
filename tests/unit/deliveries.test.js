@@ -2,8 +2,8 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 
-const deliveryService = require('../src/services/delivery.service');
-const { AppError } = require('../src/errors/AppError');
+const deliveryService = require('../../src/services/delivery.service');
+const { AppError } = require('../../src/errors/AppError');
 
 const validId = '507f1f77bcf86cd799439011';
 
@@ -66,8 +66,8 @@ test('Deliveries rechaza un destino vacío al actualizar', async () => {
 
 
 test('Deliveries crea una entrega válida con estado PENDING', async () => {
-    const orderRepository = require('../src/repositories/order.repository');
-    const deliveryRepository = require('../src/repositories/delivery.repository');
+    const orderRepository = require('../../src/repositories/order.repository');
+    const deliveryRepository = require('../../src/repositories/delivery.repository');
   
     const originalOrder = orderRepository.getById;
     const originalGetByOrder = deliveryRepository.getByOrder;
@@ -100,7 +100,7 @@ test('Deliveries crea una entrega válida con estado PENDING', async () => {
   });
   
   test('Deliveries actualiza correctamente una entrega', async () => {
-    const deliveryRepository = require('../src/repositories/delivery.repository');
+    const deliveryRepository = require('../../src/repositories/delivery.repository');
     const originalUpdate = deliveryRepository.update;
   
     try {

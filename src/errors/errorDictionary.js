@@ -1,5 +1,29 @@
 
 const ERROR_DICTIONARY = Object.freeze({
+    FILE_REQUIRED: {
+      statusCode: 400,
+      message: 'Se requiere adjuntar un archivo'
+    },
+    INVALID_FILE_TYPE: {
+      statusCode: 400,
+      message: 'Tipo de archivo no permitido'
+    },
+    FILE_TOO_LARGE: {
+      statusCode: 413,
+      message: 'El archivo supera el tamaño máximo permitido'
+    },
+    INVALID_DOCUMENT_TYPE: {
+      statusCode: 400,
+      message: 'Tipo de documento inválido'
+    },
+    UNEXPECTED_FILE_FIELD: {
+      statusCode: 400,
+      message: 'Campo de archivo inesperado'
+    },
+    FILE_UPLOAD_FAILED: {
+      statusCode: 500,
+      message: 'No se pudo guardar el archivo'
+    },
     USER_NOT_FOUND: {
       statusCode: 404,
       message: 'Usuario no encontrado'

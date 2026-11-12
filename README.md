@@ -9,6 +9,8 @@ El proyecto incluye las pre-entregas correspondientes a los siguientes módulos:
 - **Módulo 3:** Manejo profesional y centralizado de errores mediante errores personalizados y un middleware global.
 - **Módulo 4:** Logging y monitoreo básico con Winston, persistencia de errores y rotación automática de archivos.
 - **Módulo 5:** Documentación profesional de la API con Swagger UI y OpenAPI.
+- **Módulo 6:** Testing funcional con Mocha, Chai, Supertest y MongoDB temporal.
+- **Módulo 7:** Carga de archivos, documentos y comprobantes mediante Multer, con validaciones y almacenamiento de metadatos en MongoDB.
 
 ## Módulo 1 — Arquitectura por capas
 
@@ -470,7 +472,7 @@ la opción "Try it out".
 - Mocks: generación y carga controlada de datos de prueba.
 - Logger: endpoint interno para validar Winston.
 
-La documentación incluye 25 operaciones HTTP.
+La documentación incluye 27 operaciones HTTP.
 
 ### Schemas reutilizables
 
@@ -631,7 +633,53 @@ Al finalizar, se cierra la conexión y se detiene MongoDB en memoria.
 - 52 pruebas anteriores aprobadas.
 - 25 pruebas funcionales generales aprobadas.
 - 2 pruebas funcionales de inserción y validación aprobadas.
-- Total: 79 pruebas aprobadas y 0 fallidas.
+- Total: 88 pruebas aprobadas y 0 fallidas.
 
 Las pruebas funcionales se ejecutaron varias veces consecutivas
 sin necesidad de limpiar datos manualmente.
+
+### Organización de las pruebas
+
+Todas las pruebas están dentro de `tests/`:
+
+- `tests/unit/`: 52 pruebas unitarias con node:test.
+- `tests/functional/`: 27 pruebas funcionales con Mocha, Chai y Supertest.
+- `tests/support.cjs`: configuración de MongoDB temporal y hooks de Mocha.
+
+El comando `npm test` ejecuta las 88 pruebas.
+
+## Modulo 7 - Carga de archivos y comprobantes
+
+ShipNow permite subir documentos de usuarios y comprobantes de entrega utilizando Multer y multipart/form-data.
+
+### Endpoints
+
+POST /api/users/:id/documents
+- file: PDF, JPG o PNG.
+- documentType: DNI, LICENCIA u OTRO.
+
+POST /api/deliveries/:id/proof
+- file: PDF, JPG o PNG.
+
+### Validaciones
+
+- Tamano maximo: 5 MB.
+- Validacion del tipo MIME y firma inicial.
+- Nombres unicos para los archivos.
+- Verificacion de usuarios y entregas existentes.
+- Errores centralizados mediante AppError.
+- Registro de operaciones con Winston.
+
+### Almacenamiento
+
+- uploads/users/documents/
+- uploads/deliveries/receipts/
+
+MongoDB almacena los metadatos del archivo, no su contenido.
+La carpeta uploads/ esta excluida de Git.
+
+### Pruebas
+
+Ejecutar npm test para correr las pruebas unitarias, funcionales y de integracion.
+
+La documentacion Swagger esta disponible en /api/docs.

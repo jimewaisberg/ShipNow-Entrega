@@ -1,7 +1,7 @@
 const { describe, it, beforeEach } = require('mocha');
 const request = require('supertest');
 const mongoose = require('mongoose');
-const ctx = require('./support.cjs');
+const ctx = require('../support.cjs');
 
 describe('Mocks - Tests funcionales', function () {
   it('GET /api/mocks/users genera usuarios ficticios', async function () {

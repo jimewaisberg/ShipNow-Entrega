@@ -2,8 +2,8 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 
-const productService = require('../src/services/product.service');
-const productRepository = require('../src/repositories/product.repository');
+const productService = require('../../src/services/product.service');
+const productRepository = require('../../src/repositories/product.repository');
 
 const validProduct = {
   title: 'Auriculares',
