@@ -18,6 +18,10 @@ const options = {
     ],
     tags: [
       {
+        name: 'Uploads',
+        description: 'Carga de documentos de usuarios y comprobantes de entrega'
+      },
+      {
         name: 'Users',
         description: 'Gestión de usuarios'
       },

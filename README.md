@@ -683,3 +683,16 @@ La carpeta uploads/ esta excluida de Git.
 Ejecutar npm test para correr las pruebas unitarias, funcionales y de integracion.
 
 La documentacion Swagger esta disponible en /api/docs.
+
+
+## Instalación de dependencias y ejecución de tests
+
+Para instalar las dependencias de desarrollo, incluida Mocha:
+
+    npm ci --include=dev
+
+Para ejecutar las pruebas unitarias, funcionales y de integración:
+
+    npm test
+
+Mocha pertenece a devDependencies y debe estar instalado para ejecutar la suite.
